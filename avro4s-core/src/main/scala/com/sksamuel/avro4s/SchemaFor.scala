@@ -264,7 +264,7 @@ object SchemaFor {
       .getOrElse(schemaWithOrderedUnion)
 
     val field = encodedDefault match {
-      case null => new Schema.Field(name, schemaWithResolvedNamespace, doc)
+      case null => new Schema.Field(name, schemaWithResolvedNamespace, doc, null)
       case CustomUnionDefault(_, m) =>
         new Schema.Field(name, schemaWithResolvedNamespace, doc, m)
       case CustomEnumDefault(m) =>
@@ -366,7 +366,7 @@ object SchemaFor {
         val nameExtractor = NameExtractor(ctx.typeName, ctx.annotations)
 
         CustomDefaults.sealedTraitEnumDefaultValue(ctx).map { default =>
-          SchemaBuilder.enumeration(nameExtractor.name).defaultSymbol(default).namespace(nameExtractor.namespace).symbols(symbols: _*)
+          SchemaBuilder.enumeration(nameExtractor.name).namespace(nameExtractor.namespace).symbols(symbols: _*)
         }.getOrElse(SchemaBuilder.enumeration(nameExtractor.name).namespace(nameExtractor.namespace).symbols(symbols: _*))
 
       } else {
@@ -407,7 +407,7 @@ object SchemaFor {
 
     val s = SchemaBuilder.enumeration(nameExtractor.name).namespace(nameExtractor.namespace).symbols(syms: _*)
     props.foreach { case (key, value) =>
-      s.addProp(key, value)
+      s.addProp(key, value.asInstanceOf[Any])
     }
 
     override def schema(fieldMapper: FieldMapper): Schema = s

@@ -6,7 +6,7 @@
     {
       "name": "f",
       "type": "float",
-      "default" : 123.458
+      "default" : 123.4589
     }
   ]
 }
